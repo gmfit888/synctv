@@ -61,6 +61,7 @@ func Init(e *gin.Engine) {
 	}
 }
 
+
 func initAdmin(admin, root *gin.RouterGroup) {
 	{
 		admin.GET("/settings", AdminSettings)
@@ -190,6 +191,9 @@ func initRoom(room, needAuthUser, needAuthRoom, needAuthWithoutGuestRoom *gin.Ro
 		needAuthRoomCreator.POST("/members/admin", RoomSetAdmin)
 
 		needAuthRoomCreator.POST("/members/admin/permissions", RoomSetAdminPermissions)
+		needAuthRoom.GET("/:room_id/chat/messages", GetRoomChatMessages)
+		needAuthRoom.GET("/:room_id/chat/recent", GetRoomRecentChatMessages)
+		needAuthRoom.DELETE("/:room_id/chat/messages", DeleteRoomChatMessages)		
 	}
 }
 
