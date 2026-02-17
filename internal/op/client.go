@@ -9,7 +9,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"github.com/synctv-org/synctv/internal/model"
+	"github.com/synctv-org/synctv/internal/db"
 	pb "github.com/synctv-org/synctv/proto/message"
+	log "github.com/sirupsen/logrus"
 )
 
 type Client struct {
@@ -65,7 +67,11 @@ func (c *Client) SendChatMessage(message string) error {
 	if !c.u.HasRoomPermission(c.r, model.PermissionSendChatMessage) {
 		return model.ErrNoPermission
 	}
-
+	// 保存聊天记录到数据库
+	_, err := db.CreateChatMessage(c.r.ID, c.u.ID, c.u.Username, message)
+	if err != nil {
+		log.Errorf("failed to save chat message: %v", err)
+		// 不阻断发送，仅记录错误
 	return c.Broadcast(&pb.Message{
 		Type:      pb.MessageType_CHAT,
 		Timestamp: time.Now().UnixMilli(),
