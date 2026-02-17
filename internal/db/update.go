@@ -29,6 +29,7 @@ var models = []any{
 	new(model.AlistVendor),
 	new(model.EmbyVendor),
 	new(model.VendorBackend),
+	new(model.ChatMessage), 
 }
 
 var dbVersions = map[string]dbVersion{
